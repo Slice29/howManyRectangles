@@ -15,6 +15,11 @@ body {
 }
 
 
+#numbersDisplay
+{
+    font-size: 3.5em;
+}
+
 textArea
 {
     width:30em;
