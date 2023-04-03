@@ -25,6 +25,8 @@ I highly recommend using the app on a desktop PC, as it's not responsive enough 
 
 The project has the following inputs: the size of the grid and the points to check on the grid.
 
+The coordinates are flipped from the classical cartesian ones, as it was easier for me to work with them this way. So X coordinate is really the Y coordinate and the other way around.
+
 After submitting the first form, the grid and the points will be generated on the canvas. 
 
 I took the liberty to provide some input data, but feel free to change it and experiment with different grid sizes and points.
