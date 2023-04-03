@@ -254,7 +254,7 @@ form1.addEventListener('submit', (event) => {
 
 // event listener for the 'Look for rectangles!' button
 form2.addEventListener('submit', (event) => {
-    //rectCounter = 1;
+    rectCounter = 0;
     event.preventDefault();
 for(let i = 0; i < rectangleArray.length;i++)
     {
