@@ -255,8 +255,8 @@ form2.addEventListener('submit', (event) => {
     textArea.value = '';
     rectCounter = 0;
     event.preventDefault();
-    if (rectangleArray.length > 0)
-        rectangleArray = Array(rectangleArray.length).fill(null)
+
+    rectangleArray.length = 0;
     Rectangles(pointsMatrix);
     //console.log(rectangleArray.length);
 })
@@ -268,6 +268,7 @@ next.addEventListener("click", () => {
     if (noRect > 0) {
         rectCounter++;
         console.log(rectCounter)
+        console.log("number of total rectangles:" + rectangleArray.length)
         if (rectCounter < rectangleArray.length) {
             draw(...rectangleArray[rectCounter])
             textArea.value = dreptString[rectCounter];
