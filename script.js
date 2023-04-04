@@ -14,7 +14,7 @@ const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 const ctx = canvas.getContext('2d');
 
-
+let noRect;
 const display = document.getElementById('displayBox');
 
 // global variable declaration
@@ -36,8 +36,7 @@ let intArray = []
 
 
 // function that draws the grid and the points
-function desen()
-{
+function desen() {
     ctx.clearRect(0, 0, canvasHeight, canvasWidth);
     pointsMatrix = matrixRepresentation(pointsArray);
     //console.log(pointsMatrix)
@@ -98,7 +97,7 @@ function getNumbersFromString(str) {
     const regex = /\d+/g;
     const matches = str.match(regex); // array of all matches
     return matches.map(Number);
-  }
+}
 
 // searching for the node, linear O(n) complexity
 function cautare(arr, target, start = 0, end = arr.length - 1) {
@@ -119,9 +118,9 @@ function draw(c1, c2, c3, c4) {
     lineWidth = canvasWidth / ySize;
     lineHeight = canvasHeight / xSize;
 
-// redrawing the grid
-   desen();
-// drawing the rectangle
+    // redrawing the grid
+    desen();
+    // drawing the rectangle
     ctx.strokeStyle = 'red'
     ctx.lineWidth = lineWidth / 15;
     ctx.setLineDash([]);
@@ -152,22 +151,21 @@ function sortArray(matrix) {
                 matrix[i][0] = ajutor[0];
                 matrix[i][1] = ajutor[1];
 
-               
+
             }
             else if (matrix[i][0] == matrix[j][0]) {
-               if(matrix[i][1] > matrix[j][1])
-               {
-                let ajutor = [];
-                ajutor[0] = matrix[j][0];
-                ajutor[1] = matrix[j][1];
+                if (matrix[i][1] > matrix[j][1]) {
+                    let ajutor = [];
+                    ajutor[0] = matrix[j][0];
+                    ajutor[1] = matrix[j][1];
 
-                matrix[j][0] = matrix[i][0];
-                matrix[j][1] = matrix[i][1];
+                    matrix[j][0] = matrix[i][0];
+                    matrix[j][1] = matrix[i][1];
 
-                matrix[i][0] = ajutor[0];
-                matrix[i][1] = ajutor[1];
+                    matrix[i][0] = ajutor[0];
+                    matrix[i][1] = ajutor[1];
 
-               }
+                }
             }
         }
     }
@@ -182,11 +180,12 @@ let p = 0;
 
 // the bread and butter of the algorithm, complexity O(n^3)
 function Rectangles(matrix) {
+    noRect = 0;
     p = 0;
     // sorting the matrix
     matrix = sortArray(matrix);
     //console.log(matrix)
-    let noRect = 0;
+
 
     //iterating over the matrix to find possible opposite corners of a rectangle 
     for (let i = 0; i < matrix.length; i++) {
@@ -196,7 +195,7 @@ function Rectangles(matrix) {
                 let targetNode1 = [matrix[i][0], matrix[j][1]];
                 let targetNode2 = [matrix[j][0], matrix[i][1]];
                 // searching for the vertices, which we know are in the interval [i,j] because the array is sorted
-                if (cautare(matrix, targetNode1,i+1,j) && cautare(matrix, targetNode2,i+1,j)) {
+                if (cautare(matrix, targetNode1, i + 1, j) && cautare(matrix, targetNode2, i + 1, j)) {
                     noRect++;
                     // adding text to the string that is displayed in the text box
                     dreptString[p] = (`Current rectangle: (${matrix[i]}), (${targetNode1}), (${matrix[j]}), (${targetNode2})`)
@@ -209,18 +208,17 @@ function Rectangles(matrix) {
             }
         }
     }
-    // drawing the first rectangle
-    draw(...rectangleArray[0]);
+    if (noRect !== 0)
+        draw(...rectangleArray[0]);
 
     // displaying the text about the number of found rectangles
 
     if (noRect === 0)
         numbersDisplay.innerHTML = 'no rectangles found';
-    else if (noRect === 1)
-    {
+    else if (noRect === 1) {
         numbersDisplay.innerHTML = '1 rectangle found'
         textArea.value = dreptString[0];
-    } 
+    }
     else {
         numbersDisplay.innerHTML = `${noRect} rectangles found`
         textArea.value = dreptString[0];
@@ -234,54 +232,55 @@ function Rectangles(matrix) {
 // event listener for the first button
 form1.addEventListener('submit', (event) => {
     event.preventDefault();
-    
+
     gridSize = input1.value;
 
     // parsing the grid size
     intArray = gridSize.split(',');
-   
 
-   // extracting the points from the second input
-        let points = input2.value;
-      pointsArray = getNumbersFromString(points);
-      desen();
-     
-    
-  
-  
+
+    // extracting the points from the second input
+    let points = input2.value;
+    pointsArray = getNumbersFromString(points);
+    desen();
+
+
+
+
 });
 
 
 // event listener for the 'Look for rectangles!' button
 form2.addEventListener('submit', (event) => {
+    textArea.value = '';
     rectCounter = 0;
     event.preventDefault();
-for(let i = 0; i < rectangleArray.length;i++)
-    {
-        if(rectangleArray[i]) rectangleArray.splice(i,1);
-    }
+    if (rectangleArray.length > 0)
+        rectangleArray = Array(rectangleArray.length).fill(null)
     Rectangles(pointsMatrix);
-    console.log(rectangleArray.length);
+    //console.log(rectangleArray.length);
 })
 
 
 
 // event listener for the next button
 next.addEventListener("click", () => {
-    rectCounter++;
-    console.log(rectCounter)
-    if (rectCounter < rectangleArray.length) {
-        draw(...rectangleArray[rectCounter])
-        textArea.value = dreptString[rectCounter];
-    }
-    else if (rectCounter >= rectangleArray.length) {
-        rectCounter = 0;
+    if (noRect > 0) {
+        rectCounter++;
         console.log(rectCounter)
-        draw(...rectangleArray[rectCounter])
-        textArea.value = dreptString[rectCounter];
+        if (rectCounter < rectangleArray.length) {
+            draw(...rectangleArray[rectCounter])
+            textArea.value = dreptString[rectCounter];
+        }
+        else if (rectCounter >= rectangleArray.length) {
+            rectCounter = 0;
+            console.log(rectCounter)
+            draw(...rectangleArray[rectCounter])
+            textArea.value = dreptString[rectCounter];
+        }
     }
-})
 
+})
 
 
 
